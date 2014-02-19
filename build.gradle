@@ -1,0 +1,85 @@
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = 'com.palominolabs.proximo'
+version = '1.0.0-SNAPSHOT'
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+
+dependencies {
+  compile "org.codehaus.groovy:groovy-all:2.2.1"
+  compile 'org.slf4j:slf4j-api:1.7.5'
+}
+
+repositories {
+  mavenCentral()
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  from sourceSets.main.allJava
+  classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
+
+artifacts {
+  // Register in 'archives' config so they will be signed
+  archives sourcesJar
+  archives javadocJar
+}
+
+signing {
+  required { gradle.taskGraph.hasTask("uploadArchives") }
+  sign configurations.archives
+}
+
+// Set sonatypeUsername and sonatypePassword in your ~/.gradle/gradle.properties to be able to use this.
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { deployment -> signing.signPom(deployment) }
+
+      repository(url: isReleaseVersion ?
+        "https://oss.sonatype.org/service/local/staging/deploy/maven2/" :
+        "https://oss.sonatype.org/content/repositories/snapshots/") {
+        def u = project.hasProperty('sonatypeUsername') ? sonatypeUsername : 'FIXME'
+        def p = project.hasProperty('sonatypePassword') ? sonatypePassword : 'FIXME'
+        authentication(userName: u, password: p)
+      }
+
+      pom.project {
+        name 'proximo-socks'
+        packaging 'jar'
+        description 'Use Proximo as a SOCKS proxy'
+        url 'https://github.com/palominolabs/proximo-socks'
+
+        scm {
+          url 'scm:git@github.com:palominolabs/proximo-socks.git'
+          connection 'scm:git@github.com:palominolabs/proximo-socks.git'
+          developerConnection 'scm:git@github.com:palominolabs/proximo-socks.git'
+        }
+
+        licenses {
+          license {
+            name 'The Apache Software License, Version 2.0'
+            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            distribution 'repo'
+          }
+        }
+
+        developers {
+          developer {
+            id 'dinomite'
+            name 'Drew Stephens'
+          }
+        }
+      }
+    }
+  }
+}
