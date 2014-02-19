@@ -1,4 +1,4 @@
-package com.palominolabs.proximo
+package com.palominolabs.heroku
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -14,7 +14,7 @@ public class Proximo {
    *
    * @return True if Proximo was configured, false if the Proximo environment variable was not found
    */
-  public static boolean setupProximo() {
+  public static boolean setup() {
     String proximoUrl = System.getenv(PROXIMO_ENV_VAR)
     if (proximoUrl != null) {
       URL proximo = new URL(proximoUrl)
