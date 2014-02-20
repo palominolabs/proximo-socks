@@ -12,12 +12,12 @@ Maven
     <dependency>
         <groupId>com.palominolabs.heroku</groupId>
         <artifactId>proximo-socks</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </dependency>
 
 Gradle
 
-    compile 'com.palominolabs.heroku:proximo-socks:1.0.0-SNAPSHOT'
+    compile 'com.palominolabs.heroku:proximo-socks:1.0.0'
 
 ## Use the module
 
