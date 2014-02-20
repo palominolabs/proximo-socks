@@ -36,7 +36,7 @@ public class Proximo {
   }
 
   private static class ProxyAuth extends Authenticator {
-    private PasswordAuthentication passwordAuthentication;
+    private final PasswordAuthentication passwordAuthentication;
 
     private ProxyAuth(String user, String password) {
       passwordAuthentication = new PasswordAuthentication(user, password.toCharArray())
